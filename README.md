@@ -1,6 +1,6 @@
 ### Boost android builder
 
-boost as used by [nova](https://github.com/nova/aos-AVP).
+boost as used by [nova](https://github.com/nova-video-player/aos-AVP).
 Please see upstream Gist from enh: 
 
 https://gist.github.com/enh/b2dc8e2cbbce7fffffde2135271b10fd
