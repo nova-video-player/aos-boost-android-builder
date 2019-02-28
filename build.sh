@@ -166,7 +166,7 @@ echo "Building..."
     threadapi=pthread \
     link=static \
     runtime-link=static \
-    install
+    install || true
 
 
 echo "Running ranlib on libraries..."
