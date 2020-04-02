@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=1.69.0
+version=1.72.0
 echo "Building boost $version..."
 
 while getopts "a:c:" opt; do
@@ -25,7 +25,7 @@ fi
 
 LOCAL_PATH=$(readlink -f .)
 NDK_PATH=$(dirname "$(which ndk-build)")
-NDK_VERSION=r19-beta2
+NDK_VERSION=r20
 
 if [ -z ${NDK_PATH} ] || [ ! -d ${NDK_PATH} ] || [ ${NDK_PATH} == . ]; then
     NDK_NAME="android-ndk-${NDK_VERSION}"
