@@ -14,3 +14,4 @@ for ARCH in arm arm64 x86 x86_64; do
 	fi
 
 done
+true
