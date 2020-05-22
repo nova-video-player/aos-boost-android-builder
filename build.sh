@@ -55,13 +55,15 @@ case "${ARCH}" in
 		ABI='armeabi-v7a'
 		ARCH_CFLAGS='-march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb'
 		ARCH_LDFLAGS='-march=armv7-a -Wl,--fix-cortex-a8'
-        B_ARCH='arm' 
+        B_ARCH='arm'
+        B_ABI='aapcs'
         B_ADDRESS_MODEL=32 ;;
 	'arm64')
 		ARCH_TRIPLET='aarch64-linux-android'
         ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
 		ABI='arm64-v8a'
-		B_ARCH='arm'     
+		B_ARCH='arm'
+		B_ABI='aapcs'
         B_ADDRESS_MODEL=64 ;;
     'x86')
 		ARCH_TRIPLET='i686-linux-android'
@@ -69,14 +71,16 @@ case "${ARCH}" in
 		ARCH_CONFIG_OPT='--disable-asm'
 		ARCH_CFLAGS='-march=i686 -mtune=intel -mssse3 -mfpmath=sse -m32'
 		ABI='x86' 
-        B_ARCH='x86'        
+        B_ARCH='x86'
+        B_ABI='sysv'
         B_ADDRESS_MODEL=32 ;;
     'x86_64')
 		ARCH_TRIPLET='x86_64-linux-android'
         ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
 		ABI='x86_64'
 		ARCH_CFLAGS='-march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel'
-		B_ARCH='x86'        
+		B_ARCH='x86'
+		B_ABI='sysv'
         B_ADDRESS_MODEL=64 ;;
 	*)
 		echo "Arch ${ARCH} is not supported."
@@ -132,6 +136,7 @@ echo "Bootstrapping..."
 
 echo "Building..."
 ./b2 -j32 \
+    -a -q \
     --with-atomic \
     --with-chrono \
     --with-container \
@@ -156,23 +161,25 @@ echo "Building..."
     --with-timer \
     --with-type_erasure \
     --with-wave \
+    --layout=system \
+    target-os=android \
     toolset=clang-android \
     architecture=${B_ARCH} \
-    address-model=${B_ADDRESS_MODEL}
+    address-model=${B_ADDRESS_MODEL} \
+    abi=${B_ABI} \
+    binary-format=elf \
     variant=release \
-    --layout=versioned \
-    target-os=android \
     threading=multi \
     threadapi=pthread \
     link=static \
     runtime-link=static \
-    install || true
+    stage
 
 
 echo "Running ranlib on libraries..."
 libs=$(find "bin.v2/libs/" -name '*.a')
 for lib in $libs; do
-  "${CROSS_PREFIX}ranlib" "$lib"
+  "${CROSS_PREFIX}/${ARCH_TRIPLET}-ranlib" "$lib"
 done
 
 echo "Done!"
