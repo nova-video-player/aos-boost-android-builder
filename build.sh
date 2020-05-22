@@ -137,30 +137,7 @@ echo "Bootstrapping..."
 echo "Building..."
 ./b2 -j32 \
     -a -q \
-    --with-atomic \
-    --with-chrono \
-    --with-container \
-    --with-date_time \
-    --with-exception \
-    --with-fiber \
-    --with-filesystem \
-    --with-graph \
-    --with-graph_parallel \
-    --with-iostreams \
-    --with-locale \
-    --with-log \
-    --with-math \
-    --with-mpi \
-    --with-program_options \
-    --with-random \
-    --with-regex \
-    --with-serialization \
     --with-system \
-    --with-test \
-    --with-thread \
-    --with-timer \
-    --with-type_erasure \
-    --with-wave \
     --layout=system \
     target-os=android \
     toolset=clang-android \
