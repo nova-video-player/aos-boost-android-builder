@@ -108,17 +108,14 @@ else
   echo "Archive $archive already unpacked into $dir_name"
 fi
 if [ ! -d "${dir_name}-${ABI}" ]; then
-  mv $dir_name ${dir_name}-${ABI}
-  dir_name=${dir_name}-${ABI}
-  cd $dir_name
-else
-  echo "Already built for ${ABI}"
-  exit 0
+  mkdir -p ${dir_name}-${ABI}/stage
 fi
 
+cd $dir_name
+
+user_config=../${dir_name}-${ABI}/user-config.jam
+if [ ! -f "$user_config" ]; then
 echo "Generating config..."
-user_config=tools/build/src/user-config.jam
-rm -f $user_config
 cat <<EOF > $user_config
 import os ;
 
@@ -130,15 +127,20 @@ using clang : android
 <ranlib>${CROSS_PREFIX}/${ARCH_TRIPLET}-ranlib
 ;
 EOF
+fi
 
-echo "Bootstrapping..."
-./bootstrap.sh #--with-toolset=clang
+if [ ! -f b2 ]; then
+  echo "Bootstrapping..."
+  ./bootstrap.sh #--with-toolset=clang
+fi
 
 echo "Building..."
 ./b2 -j32 \
     -a -q \
     --with-system \
     --layout=system \
+    --build-dir=../${dir_name}-${ABI} \
+    --stagedir=../${dir_name}-${ABI}/stage \
     target-os=android \
     toolset=clang-android \
     architecture=${B_ARCH} \
@@ -154,7 +156,7 @@ echo "Building..."
 
 
 echo "Running ranlib on libraries..."
-libs=$(find "bin.v2/libs/" -name '*.a')
+libs=$(find "../${dir_name}-${ABI}/boost/bin.v2/libs" -name '*.a')
 for lib in $libs; do
   "${CROSS_PREFIX}/${ARCH_TRIPLET}-ranlib" "$lib"
 done
