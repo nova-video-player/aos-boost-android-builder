@@ -135,7 +135,7 @@ if [ ! -f b2 ]; then
 fi
 
 echo "Building..."
-./b2 -j32 \
+./b2 -j4 \
     -a -q \
     --with-system \
     --layout=system \
