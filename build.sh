@@ -6,9 +6,9 @@ echo "Building boost $version..."
 while getopts "a:c:" opt; do
   case $opt in
     a)
-	ARCH=$OPTARG ;;
+  ARCH=$OPTARG ;;
     c)
-	FLAVOR=$OPTARG ;;
+  FLAVOR=$OPTARG ;;
     :)
       echo "Option -$OPTARG requires an argument." >&2
       exit 1
@@ -16,32 +16,36 @@ while getopts "a:c:" opt; do
   esac
 done
 
-if [[ -z "${ARCH}" ]] ; then
-	echo 'You need to input arch with -a ARCH.'
-	echo 'Supported archs are:'
-	echo -e '\tarm arm64 x86 x86_64'
-	exit 1
+if [ -z "${ARCH}" ]
+then
+  echo 'You need to input arch with -a ARCH.'
+  echo 'Supported archs are:'
+  echo -e '\tarm arm64 x86 x86_64'
+  exit 1
 fi
 
 LOCAL_PATH=$(readlink -f .)
 NDK_PATH=$(dirname "$(which ndk-build)")
 NDK_VERSION=r20
 
-if [ -z ${NDK_PATH} ] || [ ! -d ${NDK_PATH} ] || [ ${NDK_PATH} == . ]; then
-    NDK_NAME="android-ndk-${NDK_VERSION}"
-	if [ -d ~/"${NDK_NAME}" ]; then
-        echo 'using home ndk'
-        NDK_PATH=$(readlink -f ~/"${NDK_NAME}")
-        else
-        if [ ! -d "${NDK_NAME}" ]; then
-		    echo "downloading android ndk ${NDK_NAME}..."
-		    wget https://dl.google.com/android/repository/${NDK_NAME}-linux-x86_64.zip
-		    unzip "${NDK_NAME}-linux-x86_64.zip"
-		    rm -f "${NDK_NAME}-linux-x86_64.zip"
-	    fi
-	    echo 'using integrated ndk'
-	    NDK_PATH=$(readlink -f "${NDK_NAME}")
-     fi
+if [ -z ${NDK_PATH} ] || [ ! -d ${NDK_PATH} ] || [ ${NDK_PATH} == . ]
+then
+  NDK_NAME="android-ndk-${NDK_VERSION}"
+  if [ -d ~/"${NDK_NAME}" ]
+  then
+    echo 'using home ndk'
+    NDK_PATH=$(readlink -f ~/"${NDK_NAME}")
+    else
+    if [ ! -d "${NDK_NAME}" ]
+    then
+      echo "downloading android ndk ${NDK_NAME}..."
+      wget https://dl.google.com/android/repository/${NDK_NAME}-linux-x86_64.zip
+      unzip "${NDK_NAME}-linux-x86_64.zip"
+      rm -f "${NDK_NAME}-linux-x86_64.zip"
+    fi
+    echo 'using integrated ndk'
+    NDK_PATH=$(readlink -f "${NDK_NAME}")
+  fi
 fi
 
 ANDROID_API=21
@@ -49,42 +53,42 @@ ANDROID_API=21
 ARCH_CONFIG_OPT=
 
 case "${ARCH}" in
-	'arm')
-		ARCH_TRIPLET='arm-linux-androideabi'
-        ARCH_TRIPLET_VARIANT='armv7a-linux-androideabi'
-		ABI='armeabi-v7a'
-		ARCH_CFLAGS='-march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb'
-		ARCH_LDFLAGS='-march=armv7-a -Wl,--fix-cortex-a8'
-        B_ARCH='arm'
-        B_ABI='aapcs'
-        B_ADDRESS_MODEL=32 ;;
-	'arm64')
-		ARCH_TRIPLET='aarch64-linux-android'
-        ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
-		ABI='arm64-v8a'
-		B_ARCH='arm'
-		B_ABI='aapcs'
-        B_ADDRESS_MODEL=64 ;;
-    'x86')
-		ARCH_TRIPLET='i686-linux-android'
-        ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
-		ARCH_CONFIG_OPT='--disable-asm'
-		ARCH_CFLAGS='-march=i686 -mtune=intel -mssse3 -mfpmath=sse -m32'
-		ABI='x86' 
-        B_ARCH='x86'
-        B_ABI='sysv'
-        B_ADDRESS_MODEL=32 ;;
-    'x86_64')
-		ARCH_TRIPLET='x86_64-linux-android'
-        ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
-		ABI='x86_64'
-		ARCH_CFLAGS='-march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel'
-		B_ARCH='x86'
-		B_ABI='sysv'
-        B_ADDRESS_MODEL=64 ;;
-	*)
-		echo "Arch ${ARCH} is not supported."
-		exit 1 ;;
+  'arm')
+    ARCH_TRIPLET='arm-linux-androideabi'
+    ARCH_TRIPLET_VARIANT='armv7a-linux-androideabi'
+    ABI='armeabi-v7a'
+    ARCH_CFLAGS='-march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb'
+    ARCH_LDFLAGS='-march=armv7-a -Wl,--fix-cortex-a8'
+    B_ARCH='arm'
+    B_ABI='aapcs'
+    B_ADDRESS_MODEL=32 ;;
+  'arm64')
+    ARCH_TRIPLET='aarch64-linux-android'
+    ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
+    ABI='arm64-v8a'
+    B_ARCH='arm'
+    B_ABI='aapcs'
+    B_ADDRESS_MODEL=64 ;;
+  'x86')
+    ARCH_TRIPLET='i686-linux-android'
+    ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
+    ARCH_CONFIG_OPT='--disable-asm'
+    ARCH_CFLAGS='-march=i686 -mtune=intel -mssse3 -mfpmath=sse -m32'
+    ABI='x86' 
+    B_ARCH='x86'
+    B_ABI='sysv'
+    B_ADDRESS_MODEL=32 ;;
+  'x86_64')
+    ARCH_TRIPLET='x86_64-linux-android'
+    ARCH_TRIPLET_VARIANT=$ARCH_TRIPLET
+    ABI='x86_64'
+    ARCH_CFLAGS='-march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel'
+    B_ARCH='x86'
+    B_ABI='sysv'
+    B_ADDRESS_MODEL=64 ;;
+  *)
+    echo "Arch ${ARCH} is not supported."
+    exit 1 ;;
 esac
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -94,22 +98,22 @@ set -eu
 
 dir_name=boost_$(sed 's#\.#_#g' <<< $version)
 archive=${dir_name}.tar.bz2
-if [ ! -f "$archive" ]; then
+if [ ! -f "$archive" ]
+then
   wget -O $archive "https://dl.bintray.com/boostorg/release/$version/source/$archive"
 else
   echo "Archive $archive already downloaded"
 fi
 
 echo "Extracting..."
-if [ ! -d "$dir_name" ]; then
+if [ ! -d "$dir_name" ]
+then
   # rm -rf $dir_name
   tar xf $archive
 else
   echo "Archive $archive already unpacked into $dir_name"
 fi
-if [ ! -d "${dir_name}-${ABI}" ]; then
-  mkdir -p ${dir_name}-${ABI}/stage
-fi
+[ ! -d "${dir_name}-${ABI}" ] && mkdir -p ${dir_name}-${ABI}/stage
 
 cd $dir_name
 
@@ -129,7 +133,8 @@ using clang : android
 EOF
 fi
 
-if [ ! -f b2 ]; then
+if [ ! -f b2 ]
+then
   echo "Bootstrapping..."
   ./bootstrap.sh #--with-toolset=clang
 fi
@@ -157,7 +162,8 @@ echo "Building..."
 
 echo "Running ranlib on libraries..."
 libs=$(find "../${dir_name}-${ABI}/boost/bin.v2/libs" -name '*.a')
-for lib in $libs; do
+for lib in $libs
+do
   "${CROSS_PREFIX}/${ARCH_TRIPLET}-ranlib" "$lib"
 done
 
