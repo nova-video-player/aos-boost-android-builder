@@ -36,7 +36,7 @@ export PATH=${androidSdk}/cmdline-tools/tools/bin:${androidSdk}/tools/bin:$PATH
 [ -d "${androidSdk}/ndk-bundle" ] && NDK_PATH=${androidSdk}/ndk-bundle
 echo NDK_PATH is ${NDK_PATH}
 
-ANDROID_API=21
+ANDROID_API=24
 
 ARCH_CONFIG_OPT=
 
