@@ -124,13 +124,12 @@ fi
 if [ ! -f b2 ]
 then
   echo "Bootstrapping..."
-  ./bootstrap.sh #--with-toolset=clang
+  ./bootstrap.sh --with-libraries=system
 fi
 
 echo "Building..."
 ./b2 -j4 \
     -a -q \
-    --with-system \
     --layout=system \
     --build-dir=../${dir_name}-${ABI} \
     --stagedir=../${dir_name}-${ABI}/stage \
