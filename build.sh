@@ -134,6 +134,7 @@ echo "Building..."
     --layout=system \
     --build-dir=../${dir_name}-${ABI} \
     --stagedir=../${dir_name}-${ABI}/stage \
+    --user-config=${user_config} \
     target-os=android \
     toolset=clang-android \
     architecture=${B_ARCH} \
