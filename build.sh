@@ -124,7 +124,7 @@ fi
 if [ ! -f b2 ]
 then
   echo "Bootstrapping..."
-  ./bootstrap.sh --with-libraries=system
+  ./bootstrap.sh
 fi
 
 echo "Building..."
@@ -134,8 +134,10 @@ echo "Building..."
     --build-dir=../${dir_name}-${ABI} \
     --stagedir=../${dir_name}-${ABI}/stage \
     --user-config=${user_config} \
+    --with-system \
     target-os=android \
     toolset=clang-android \
+    cxxstd=14 \
     architecture=${B_ARCH} \
     address-model=${B_ADDRESS_MODEL} \
     abi=${B_ABI} \
