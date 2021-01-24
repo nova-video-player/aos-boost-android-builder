@@ -128,7 +128,7 @@ then
 fi
 
 echo "Building..."
-./b2 -j4 \
+./b2 -j8 \
     -a -q \
     --layout=system \
     --build-dir=../${dir_name}-${ABI} \
