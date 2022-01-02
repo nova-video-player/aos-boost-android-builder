@@ -98,7 +98,7 @@ dir_name=boost_$(sed 's#\.#_#g' <<< $version)
 archive=${dir_name}.tar.bz2
 if [ ! -f "$archive" ]
 then
-  wget -O $archive "https://boostorg.jfrog.io/artifactory/main/release/$version/source/$archive"
+  wget -q -O $archive "https://boostorg.jfrog.io/artifactory/main/release/$version/source/$archive"
 else
   echo "Archive $archive already downloaded"
 fi
