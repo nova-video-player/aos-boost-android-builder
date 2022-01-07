@@ -41,9 +41,14 @@ LOCAL_PATH=$($READLINK -f .)
 [ -n "${ANDROID_SDK_ROOT}" ] && androidSdk=${ANDROID_SDK_ROOT}
 # multiple sdkmanager paths
 export PATH=${androidSdk}/cmdline-tools/tools/bin:${androidSdk}/tools/bin:$PATH
-[ ! -d "${androidSdk}/ndk-bundle" -a ! -d "${androidSdk}/ndk" ] && sdkmanager ndk-bundle
-[ -d "${androidSdk}/ndk" ] && NDK_PATH=$(ls -d ${androidSdk}/ndk/* | sort -V | tail -n 1)
+if [ ! -d "${androidSdk}/ndk-bundle" -a ! -d "${androidSdk}/ndk" ]
+then
+  ndk=$(pkg="ndk;$NDKVER"; sdkmanager --list | grep ${pkg} | sed "s/^.*\($pkg\.[0-9\.]*\) .*$/\1/g" | tail -n 1)
+  yes | sdkmanager "${ndk}" > /dev/null
+  echo NDK $ndk installed
+fi
 [ -d "${androidSdk}/ndk-bundle" ] && NDK_PATH=${androidSdk}/ndk-bundle
+[ -d "${androidSdk}/ndk" ] && NDK_PATH=$(ls -d ${androidSdk}/ndk/* | sort -V | tail -n 1)
 echo NDK_PATH is ${NDK_PATH}
 
 ANDROID_API=24
@@ -125,8 +130,8 @@ using clang : android
 :
 "${CROSS_PREFIX}/${ARCH_TRIPLET_VARIANT}${ANDROID_API}-clang++"
 :
-<archiver>${CROSS_PREFIX}/${ARCH_TRIPLET}-ar
-<ranlib>${CROSS_PREFIX}/${ARCH_TRIPLET}-ranlib
+<archiver>${CROSS_PREFIX}/llvm-ar
+<ranlib>${CROSS_PREFIX}/llvm-ranlib
 ;
 EOF
 fi
@@ -164,7 +169,7 @@ echo "Running ranlib on libraries..."
 libs=$(find "../${dir_name}-${ABI}/boost/bin.v2/libs" -name '*.a')
 for lib in $libs
 do
-  "${CROSS_PREFIX}/${ARCH_TRIPLET}-ranlib" "$lib"
+  "${CROSS_PREFIX}/llvm-ranlib" "$lib"
 done
 
 echo "Done!"
