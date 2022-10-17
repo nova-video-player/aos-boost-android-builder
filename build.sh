@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=1.72.0
+version=1.80.0
 echo "Building boost $version..."
 
 while getopts "a:c:" opt; do
