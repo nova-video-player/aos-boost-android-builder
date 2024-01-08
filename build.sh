@@ -76,11 +76,12 @@ CROSS_PREFIX="${NDK_PATH}"/toolchains/llvm/prebuilt/${os}-x86_64/bin
 
 set -eu
 
-dir_name=boost_$(sed 's#\.#_#g' <<< $version)
-archive=${dir_name}.tar.bz2
+dir_name=boost-${version}
+archive=${dir_name}.tar.gz
+
 if [ ! -f "$archive" ]
 then
-  wget -q -O $archive "https://boostorg.jfrog.io/artifactory/main/release/$version/source/$archive"
+  wget -q -O $archive "https://github.com/boostorg/boost/releases/download/boost-${version}/${archive}"
 else
   echo "Archive $archive already downloaded"
 fi
