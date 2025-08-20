@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=1.84.0
+version=1.89.0
 echo "Building boost $version..."
 
 while getopts "a:c:" opt; do
@@ -81,7 +81,7 @@ archive=${dir_name}.tar.gz
 
 if [ ! -f "$archive" ]
 then
-  wget -q -O $archive "https://github.com/boostorg/boost/releases/download/boost-${version}/${archive}"
+  wget -q -O $archive "https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.gz"
 else
   echo "Archive $archive already downloaded"
 fi
@@ -90,7 +90,8 @@ echo "Extracting..."
 if [ ! -d "$dir_name" ]
 then
   # rm -rf $dir_name
-  tar xf $archive
+  mkdir ${dir_name}
+  tar xf $archive --strip-components=1 -C ${dir_name}/
 else
   echo "Archive $archive already unpacked into $dir_name"
 fi
