@@ -141,6 +141,7 @@ echo "Building..."
     threadapi=pthread \
     link=static \
     runtime-link=static \
+    linkflags="-Wl,--page-size=16384" \
     stage
 
 
