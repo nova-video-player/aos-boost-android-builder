@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=1.89.0
+version=1.90.0
 echo "Building boost $version..."
 
 while getopts "a:c:" opt; do
@@ -81,7 +81,8 @@ archive=${dir_name}.tar.gz
 
 if [ ! -f "$archive" ]
 then
-  wget -q -O $archive "https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.gz"
+  version_underscore=$(echo $version | tr '.' '_')
+  wget -q -O $archive "https://archives.boost.io/release/${version}/source/boost_${version_underscore}.tar.gz"
 else
   echo "Archive $archive already downloaded"
 fi
