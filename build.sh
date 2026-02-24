@@ -72,6 +72,7 @@ case "${ARCH}" in
 esac
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
+# WARNING: x86_64 hardcoded, should be changed when NDK ships native arm64 prebuilt for Apple Silicon
 CROSS_PREFIX="${NDK_PATH}"/toolchains/llvm/prebuilt/${os}-x86_64/bin
 
 set -eu
